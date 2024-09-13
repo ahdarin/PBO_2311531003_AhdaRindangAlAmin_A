@@ -90,8 +90,7 @@ public class LoginFrame extends JFrame {
 		panel.add(btnNewButton_1);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				User user = new User();
-				if(user.login(textUsername.getText(), 
+				if(User.login(textUsername.getText(), 
 						passwordField.getText())) {
 					MainFrame main = new MainFrame();
 					main.setVisible(true);

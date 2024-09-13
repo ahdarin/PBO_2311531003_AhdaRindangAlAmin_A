@@ -33,7 +33,4 @@ public class Service {
 	public void setHarga(int harga) {
 		this.harga = harga;
 	}
-	
-	
-
 }
