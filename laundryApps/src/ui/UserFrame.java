@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JScrollPane;
 
 public class UserFrame extends JFrame {
 
@@ -30,6 +31,23 @@ public class UserFrame extends JFrame {
 	private JTextField txtUsername;
 	private JTextField txtPassword;
 	private JTable tableUsers;
+	
+	public void reset() {
+		txtName.setText("");
+		txtUsername.setText("");
+		txtPassword.setText("");
+	}
+	
+	UserRepo usr = new UserRepo();
+	List<User> ls;
+	public String id;
+	
+	public void loadTable() {
+		ls = usr.show();
+		TableUser tu = new TableUser(ls);
+		tableUsers.setModel(tu);
+		tableUsers.getTableHeader().setVisible(true);
+	}
 
 	/**
 	 * Launch the application.
@@ -46,23 +64,6 @@ public class UserFrame extends JFrame {
 				}
 			}
 		});
-	}
-	
-	public void reset() {
-		txtName.setText("");
-		txtUsername.setText("");
-		txtPassword.setText("");
-	}
-	
-	UserRepo usr = new UserRepo();
-	List<User> ls;
-	public String id;
-	
-	public void loadTable() {
-		ls=usr.show();
-		TableUser tu = new TableUser(ls);
-		tableUsers.setModel(tu);
-		tableUsers.getTableHeader().setVisible(true);
 	}
 
 	/**
@@ -168,7 +169,12 @@ public class UserFrame extends JFrame {
 		panel_1.setBounds(10, 287, 423, 265);
 		contentPane.add(panel_1);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 11, 403, 243);
+		panel_1.add(scrollPane);
+		
 		tableUsers = new JTable();
+		scrollPane.setViewportView(tableUsers);
 		tableUsers.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -178,7 +184,5 @@ public class UserFrame extends JFrame {
 				txtPassword.setText(tableUsers.getValueAt(tableUsers.getSelectedRow(),3).toString());
 			}
 		});
-		tableUsers.setBounds(10, 11, 403, 243);
-		panel_1.add(tableUsers);
 	}
 }

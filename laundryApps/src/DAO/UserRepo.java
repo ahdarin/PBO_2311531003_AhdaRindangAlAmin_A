@@ -1,6 +1,8 @@
 package DAO;
 
 import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,16 +27,19 @@ public class UserRepo implements UserDAO{
 	public void save(User user) {
 		PreparedStatement st = null;
 		try {
-			st= connection.prepareStatement(insert);
+			st = connection.prepareStatement(insert);
 			st.setString(1, user.getNama());
 			st.setString(2, user.getUsername());
 			st.setString(3, user.getPassword());
 			st.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			
 		} finally {
 			try {
 				st.close();
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
