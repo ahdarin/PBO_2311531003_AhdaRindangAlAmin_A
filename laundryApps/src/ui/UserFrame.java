@@ -160,6 +160,11 @@ public class UserFrame extends JFrame {
 		panel.add(btnDelete);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnCancel.setBounds(302, 182, 84, 23);
 		panel.add(btnCancel);
 		
