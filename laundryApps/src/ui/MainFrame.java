@@ -56,6 +56,13 @@ public class MainFrame extends JFrame {
 		btnPengguna.setFont(new Font("Montserrat", Font.PLAIN, 11));
 		
 		JButton btnLayanan = new JButton("Layanan");
+		btnLayanan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ServiceFrame servicef = new ServiceFrame();
+				servicef.setVisible(true);
+				dispose();
+			}
+		});
 		btnLayanan.setForeground(Color.BLACK);
 		btnLayanan.setFont(new Font("Montserrat", Font.PLAIN, 11));
 		btnLayanan.setBackground(Color.LIGHT_GRAY);
@@ -104,6 +111,9 @@ public class MainFrame extends JFrame {
 		contentPane.add(lblJudul);
 		btnPengguna.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				UserFrame userf = new UserFrame();
+				userf.setVisible(true);
+				dispose();
 			}
 		});
 	}

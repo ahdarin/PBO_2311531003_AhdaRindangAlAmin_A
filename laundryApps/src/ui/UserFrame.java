@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JScrollPane;
+import java.awt.Font;
 
 public class UserFrame extends JFrame {
 
@@ -162,11 +163,18 @@ public class UserFrame extends JFrame {
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				MainFrame mainf = new MainFrame();
+				mainf.setVisible(true);
 				dispose();
 			}
 		});
 		btnCancel.setBounds(302, 182, 84, 23);
 		panel.add(btnCancel);
+		
+		JLabel lblUser = new JLabel("User");
+		lblUser.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblUser.setBounds(10, 11, 56, 23);
+		panel.add(lblUser);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
