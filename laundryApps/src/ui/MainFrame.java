@@ -13,13 +13,28 @@ import java.awt.SystemColor;
 import java.awt.Panel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
+
+import DAO.CustomerRepo;
+import model.Customer;
+import table.TableCustomer;
+
+import DAO.UserRepo;
+import model.User;
+import table.TableUser;
+
+import DAO.ServiceDAO;
+import DAO.ServiceRepo;
+import model.Service;
+import table.TableService;
+
 
 public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-
+	private JPanel contentPane;	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -84,6 +99,13 @@ public class MainFrame extends JFrame {
 		contentPane.add(btnLaporan);
 		
 		JButton btnPelanggan = new JButton("Pelanggan");
+		btnPelanggan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CustomerFrame cusframe = new CustomerFrame();
+				cusframe.setVisible(true);
+				dispose();
+			}
+		});
 		btnPelanggan.setForeground(Color.BLACK);
 		btnPelanggan.setFont(new Font("Montserrat", Font.PLAIN, 11));
 		btnPelanggan.setBackground(Color.LIGHT_GRAY);

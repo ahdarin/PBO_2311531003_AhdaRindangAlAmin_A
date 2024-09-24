@@ -161,6 +161,8 @@ public class ServiceFrame extends JFrame {
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				MainFrame mainf = new MainFrame();
+				mainf.setVisible(true);
 				dispose();
 			}
 		});
