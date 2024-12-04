@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import config.Database;
+import config.DatabaseHelper;
 import model.User;
 
 public class UserRepo implements UserDAO{
@@ -20,7 +20,7 @@ public class UserRepo implements UserDAO{
 	
 
 	public UserRepo() {
-		connection = Database.koneksi();
+		connection = DatabaseHelper.getConnection();
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import config.Database;
+import config.DatabaseHelper;
 import model.Customer;
 
 public class CustomerRepo implements CustomerDAO{
@@ -20,7 +20,7 @@ public class CustomerRepo implements CustomerDAO{
 	
 
 	public CustomerRepo() {
-		connection = Database.koneksi();
+		connection = DatabaseHelper.getConnection();
 	}
 
 	@Override
