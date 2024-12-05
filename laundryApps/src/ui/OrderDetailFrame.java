@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.toedter.calendar.JDateChooser;
+
 import DAO.OrderDetailRepo;
 import DAO.OrderRepo;
 import DAO.ServiceRepo;
@@ -27,6 +29,7 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -39,8 +42,6 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtOrderID;
-	private JTextField txtTanggal;
-	private JTextField txtTanggalPengambilan;
 	private JTextField txtHarga;
 	private JTextField txtJumlah;
 	private JTextField txtTotal;
@@ -88,6 +89,9 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		tableOrderDetail.setModel(tu);
 		tableOrderDetail.getTableHeader().setVisible(true);
 	}
+	
+	public String tgl;
+	public String tgl_kbl;
 	
 	/**
 	 * Launch the application.
@@ -146,22 +150,10 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		lblTanggal.setBounds(10, 142, 108, 27);
 		order.add(lblTanggal);
 		
-		txtTanggal = new JTextField();
-		txtTanggal.setFont(new Font("Montserrat", Font.PLAIN, 12));
-		txtTanggal.setColumns(10);
-		txtTanggal.setBounds(10, 170, 255, 27);
-		order.add(txtTanggal);
-		
 		JLabel lblTanggalPengambilan = new JLabel("Tanggal Pengambilan");
 		lblTanggalPengambilan.setFont(new Font("Montserrat", Font.PLAIN, 13));
 		lblTanggalPengambilan.setBounds(10, 208, 197, 27);
 		order.add(lblTanggalPengambilan);
-		
-		txtTanggalPengambilan = new JTextField();
-		txtTanggalPengambilan.setFont(new Font("Montserrat", Font.PLAIN, 12));
-		txtTanggalPengambilan.setColumns(10);
-		txtTanggalPengambilan.setBounds(10, 236, 255, 27);
-		order.add(txtTanggalPengambilan);
 		
 		JComboBox cbStatus = new JComboBox();
 		cbStatus.setModel(new DefaultComboBoxModel(new String[] {"Diproses", "Selesai"}));
@@ -215,8 +207,8 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 					Order order = new Order();
 					order.setId(txtOrderID.getText());
 					order.setId_pelanggan(id_pelanggan);
-					order.setTanggal(txtTanggal.getText());
-					order.setTanggal_pengambilan(txtTanggalPengambilan.getText());
+					order.setTanggal(tgl);
+					order.setTanggal_pengambilan(tgl_kbl);
 					order.setStatus(cbStatus.getSelectedItem().toString());
 					order.setStatus_pembayaran(cbStatusPembayaran.getSelectedItem().toString());
 					order.setPembayaran(cbPembayaran.getSelectedItem().toString());
@@ -251,6 +243,26 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		txtPelanggan.setColumns(10);
 		txtPelanggan.setBounds(10, 114, 255, 27);
 		order.add(txtPelanggan);
+		
+		JDateChooser CalTanggal = new JDateChooser();
+		CalTanggal.setBounds(10, 168, 245, 27);
+		order.add(CalTanggal);
+		CalTanggal.getDateEditor().addPropertyChangeListener("date", evt -> {
+		    if (CalTanggal.getDate() != null) {
+		    	SimpleDateFormat sdf_tanggal = new SimpleDateFormat("yyyy-MM-dd");
+		        tgl = sdf_tanggal.format(CalTanggal.getDate());
+		    }
+		});
+		
+		JDateChooser CalTanggalKembali = new JDateChooser();
+		CalTanggalKembali.setBounds(10, 236, 245, 27);
+		order.add(CalTanggalKembali);
+		CalTanggalKembali.getDateEditor().addPropertyChangeListener("date", evt -> {
+		    if (CalTanggalKembali.getDate() != null) {
+		    	SimpleDateFormat sdf_tanggalkembali = new SimpleDateFormat("yyyy-MM-dd");
+		        tgl_kbl = sdf_tanggalkembali.format(CalTanggalKembali.getDate());
+		    }
+		});
 		
 		JPanel layanan = new JPanel();
 		layanan.setBackground(new Color(192, 192, 192));
