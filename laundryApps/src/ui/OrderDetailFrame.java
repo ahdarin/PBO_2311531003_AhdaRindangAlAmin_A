@@ -1,0 +1,409 @@
+package ui;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import DAO.OrderDetailRepo;
+import DAO.OrderRepo;
+import DAO.ServiceRepo;
+import listener.DataListener;
+import model.Order;
+import model.OrderDetail;
+import model.Service;
+import table.TableOrderDetail;
+import table.TableService;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import java.awt.Color;
+import javax.swing.JScrollPane;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class OrderDetailFrame extends JFrame implements DataListener{
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField txtOrderID;
+	private JTextField txtTanggal;
+	private JTextField txtTanggalPengambilan;
+	private JTextField txtHarga;
+	private JTextField txtJumlah;
+	private JTextField txtTotal;
+	private JTable tableOrderDetail;
+	JTable tableLayanan;
+	JTextField txtPelanggan;
+	
+	ServiceRepo sr = new ServiceRepo();
+	List<Service> ls_service;
+	public String id_service;
+	public static String id_pelanggan="";
+	
+	public void loadTableService() {
+		ls_service = sr.show();
+		TableService tu = new TableService(ls_service);
+		tableLayanan.setModel(tu);
+		tableLayanan.getTableHeader().setVisible(true);
+	}
+	
+	public double total(String jumlah) {
+		double result = 0;
+		if(jumlah.isEmpty()) {
+			result = 0;
+		} else {
+			result = Double.parseDouble(jumlah) * Double.parseDouble(txtHarga.getText());
+		}
+		return result;
+	}
+	
+	OrderDetailRepo repo_od = new OrderDetailRepo();
+	List<OrderDetail> ls_od;
+	public String id_order_detail;
+	
+	public void reset() {
+		txtHarga.setText("");
+		txtJumlah.setText("");
+		txtTotal.setText("");
+		id_service=null;
+		id_order_detail=null;
+	}
+	
+	public void loadTableDetail() {
+		ls_od = repo_od.show(id_order_detail);
+		TableOrderDetail tu = new TableOrderDetail(ls_od);
+		tableOrderDetail.setModel(tu);
+		tableOrderDetail.getTableHeader().setVisible(true);
+	}
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					OrderDetailFrame frame = new OrderDetailFrame();
+					frame.setVisible(true);
+					frame.loadTableService();
+					frame.loadTableDetail();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public OrderDetailFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 904, 682);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel order = new JPanel();
+		order.setBackground(new Color(192, 192, 192));
+		order.setBounds(10, 11, 277, 623);
+		contentPane.add(order);
+		order.setLayout(null);
+		
+		JLabel lblOrderID = new JLabel("Order ID");
+		lblOrderID.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblOrderID.setBounds(10, 11, 108, 27);
+		order.add(lblOrderID);
+		
+		txtOrderID = new JTextField();
+		txtOrderID.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		txtOrderID.setBounds(10, 38, 255, 27);
+		order.add(txtOrderID);
+		txtOrderID.setColumns(10);
+		
+		JLabel lblPelanggan = new JLabel("Pelanggan");
+		lblPelanggan.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblPelanggan.setBounds(10, 76, 108, 27);
+		order.add(lblPelanggan);
+		
+		JLabel lblTanggal = new JLabel("Tanggal");
+		lblTanggal.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblTanggal.setBounds(10, 142, 108, 27);
+		order.add(lblTanggal);
+		
+		txtTanggal = new JTextField();
+		txtTanggal.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		txtTanggal.setColumns(10);
+		txtTanggal.setBounds(10, 170, 255, 27);
+		order.add(txtTanggal);
+		
+		JLabel lblTanggalPengambilan = new JLabel("Tanggal Pengambilan");
+		lblTanggalPengambilan.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblTanggalPengambilan.setBounds(10, 208, 197, 27);
+		order.add(lblTanggalPengambilan);
+		
+		txtTanggalPengambilan = new JTextField();
+		txtTanggalPengambilan.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		txtTanggalPengambilan.setColumns(10);
+		txtTanggalPengambilan.setBounds(10, 236, 255, 27);
+		order.add(txtTanggalPengambilan);
+		
+		JComboBox cbStatus = new JComboBox();
+		cbStatus.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		cbStatus.setBounds(10, 302, 257, 27);
+		order.add(cbStatus);
+		
+		JLabel lblStatus = new JLabel("Status");
+		lblStatus.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblStatus.setBounds(10, 274, 108, 27);
+		order.add(lblStatus);
+		
+		JLabel lbltulisanTotal = new JLabel("Total");
+		lbltulisanTotal.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lbltulisanTotal.setBounds(12, 340, 108, 27);
+		order.add(lbltulisanTotal);
+		
+		JLabel lblTotal = new JLabel("Rp. 10.000");
+		lblTotal.setFont(new Font("Montserrat", Font.PLAIN, 16));
+		lblTotal.setBounds(12, 364, 108, 27);
+		order.add(lblTotal);
+		
+		JLabel lblPembayaran = new JLabel("Pembayaran");
+		lblPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblPembayaran.setBounds(12, 397, 108, 27);
+		order.add(lblPembayaran);
+		
+		JComboBox cbPembayaran = new JComboBox();
+		cbPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		cbPembayaran.setBounds(12, 425, 257, 27);
+		order.add(cbPembayaran);
+		
+		JLabel lblStatusPembayaran = new JLabel("Status Pembayaran");
+		lblStatusPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblStatusPembayaran.setBounds(10, 463, 164, 27);
+		order.add(lblStatusPembayaran);
+		
+		JComboBox cbStatusPembayaran = new JComboBox();
+		cbStatusPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		cbStatusPembayaran.setBounds(10, 491, 257, 27);
+		order.add(cbStatusPembayaran);
+		
+		JButton btnSimpanOrder = new JButton("Simpan");
+		btnSimpanOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderRepo order_repo = new OrderRepo();
+				
+				if(id_pelanggan !="") {
+					Order order = new Order();
+					order.setId(txtOrderID.getText());
+					order.setId_pelanggan(id_pelanggan);
+					order.setTanggal(txtTanggal.getText());
+					order.setTanggal_pengambilan(txtTanggalPengambilan.getText());
+					order.setStatus(cbStatus.getSelectedItem().toString());
+					order.setStatus_pembayaran(cbStatusPembayaran.getSelectedItem().toString());
+					order.setPembayaran(cbPembayaran.getSelectedItem().toString());
+					order.setTotal(lblTotal.getText());
+					order_repo.save(order);
+					JOptionPane.showMessageDialog(null, "Order berhasil Disimpan");
+				} else {
+					JOptionPane.showMessageDialog(null, "Silahkan pilih Pelanggan terlebih dahulu");
+				}
+				
+			}
+		});
+		btnSimpanOrder.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		btnSimpanOrder.setBounds(29, 556, 89, 23);
+		order.add(btnSimpanOrder);
+		
+		JButton btnBatalOrder = new JButton("Batal");
+		btnBatalOrder.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		btnBatalOrder.setBounds(156, 556, 89, 23);
+		order.add(btnBatalOrder);
+		
+		txtPelanggan = new JTextField();
+		txtPelanggan.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				DialogPelanggan dialog = new DialogPelanggan(OrderDetailFrame.this);
+				dialog.setVisible(true);
+			}
+		});
+		txtPelanggan.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		txtPelanggan.setColumns(10);
+		txtPelanggan.setBounds(10, 114, 255, 27);
+		order.add(txtPelanggan);
+		
+		JPanel layanan = new JPanel();
+		layanan.setBackground(new Color(192, 192, 192));
+		layanan.setBounds(297, 11, 583, 378);
+		contentPane.add(layanan);
+		layanan.setLayout(null);
+		
+		JLabel lblLayanan = new JLabel("Layanan");
+		lblLayanan.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblLayanan.setBounds(10, 0, 108, 27);
+		layanan.add(lblLayanan);
+		
+		JLabel lblHargakg = new JLabel("Harga/Kg");
+		lblHargakg.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblHargakg.setBounds(10, 209, 197, 27);
+		layanan.add(lblHargakg);
+		
+		txtHarga = new JTextField();
+		txtHarga.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		txtHarga.setColumns(10);
+		txtHarga.setBounds(10, 237, 255, 27);
+		layanan.add(txtHarga);
+		
+		JLabel lblJumlah = new JLabel("Jumlah");
+		lblJumlah.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblJumlah.setBounds(10, 270, 197, 27);
+		layanan.add(lblJumlah);
+		
+		txtJumlah = new JTextField();
+		txtJumlah.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String value_jumlah = txtJumlah.getText().toString();
+				txtTotal.setText(""+total(value_jumlah));
+			}
+		});
+		txtJumlah.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		txtJumlah.setColumns(10);
+		txtJumlah.setBounds(10, 298, 255, 27);
+		layanan.add(txtJumlah);
+		
+		JLabel lblTotal_1 = new JLabel("Total");
+		lblTotal_1.setFont(new Font("Montserrat", Font.PLAIN, 13));
+		lblTotal_1.setBounds(318, 270, 197, 27);
+		layanan.add(lblTotal_1);
+		
+		txtTotal = new JTextField();
+		txtTotal.setFont(new Font("Montserrat", Font.PLAIN, 12));
+		txtTotal.setColumns(10);
+		txtTotal.setBounds(318, 298, 255, 27);
+		layanan.add(txtTotal);
+		
+		JButton btnSimpanDetail = new JButton("Simpan");
+		btnSimpanDetail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(id_order_detail == null) {
+					OrderDetail od = new OrderDetail();
+					od.setOrder_id(txtOrderID.getText());
+					od.setService_id(id_service);
+					od.setHarga(txtHarga.getText());
+					od.setJumlah(txtJumlah.getText());
+					od.setTotal(txtTotal.getText());
+					repo_od.save(od);
+					JOptionPane.showMessageDialog(null, "berhasil disimpan");
+					loadTableDetail();
+					reset();
+					lblTotal.setText(""+repo_od.total(txtOrderID.getText()));	
+				}
+			}
+		});
+		btnSimpanDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		btnSimpanDetail.setBounds(78, 336, 89, 23);
+		layanan.add(btnSimpanDetail);
+		
+		JButton btnUbahDetail = new JButton("Ubah");
+		btnUbahDetail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(id_order_detail != null) {
+					OrderDetail od = new OrderDetail();
+					od.setOrder_id(txtOrderID.getText());
+					od.setService_id(id_service);
+					od.setHarga(txtHarga.getText());
+					od.setJumlah(txtJumlah.getText());
+					od.setTotal(txtTotal.getText());
+					od.setId(id_order_detail);
+					repo_od.update(od);
+					loadTableDetail();
+					reset();
+					lblTotal.setText(""+repo_od.total(txtOrderID.getText()));
+				} else {
+					JOptionPane.showMessageDialog(null, "silahkan pilih order terlebih dahulu");
+				}
+			}
+		});
+		btnUbahDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		btnUbahDetail.setBounds(177, 336, 89, 23);
+		layanan.add(btnUbahDetail);
+		
+		JButton btnHapusDetail = new JButton("Hapus");
+		btnHapusDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		btnHapusDetail.setBounds(276, 336, 89, 23);
+		layanan.add(btnHapusDetail);
+		
+		JButton btnBatalDetail = new JButton("Batal");
+		btnBatalDetail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnBatalDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		btnBatalDetail.setBounds(375, 336, 89, 23);
+		layanan.add(btnBatalDetail);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 25, 563, 183);
+		layanan.add(scrollPane);
+		
+		tableLayanan = new JTable();
+		scrollPane.setViewportView(tableLayanan);
+		tableLayanan.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		tableLayanan.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				id_service = tableLayanan.getValueAt(tableLayanan.getSelectedRow(), 0).toString();
+				txtHarga.setText(tableLayanan.getValueAt(tableLayanan.getSelectedRow(), 3).toString());
+				
+				if(!txtJumlah.getText().isEmpty()) {
+					txtTotal.setText(""+total(txtJumlah.getText()));
+				}
+			}
+		});
+		
+		JPanel tabelOrder = new JPanel();
+		tabelOrder.setBounds(297, 400, 583, 234);
+		contentPane.add(tabelOrder);
+		tabelOrder.setLayout(null);
+		
+		tableOrderDetail = new JTable();
+		tableOrderDetail.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				id_order_detail = tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 0).toString();
+				id_service = tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 2).toString();
+				txtHarga.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 3).toString());
+				txtTotal.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 5).toString());
+				txtJumlah.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 4).toString());
+			}
+		});
+		tableOrderDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
+		tableOrderDetail.setBounds(0, 0, 583, 234);
+		tabelOrder.add(tableOrderDetail);
+	}
+
+	@Override
+	public void onDataReceived(String id, String nama) {
+		// TODO Auto-generated method stub
+		txtPelanggan.setText(nama);
+		id_pelanggan=id;
+		
+	}
+}

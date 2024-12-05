@@ -2,6 +2,7 @@ package model;
 
 public class User {
 	String id, nama, username, password;
+	
 
 	public String getId() {
 		return id;
