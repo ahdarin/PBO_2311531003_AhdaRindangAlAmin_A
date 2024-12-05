@@ -32,6 +32,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.DefaultComboBoxModel;
 
 public class OrderDetailFrame extends JFrame implements DataListener{
 
@@ -163,6 +164,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		order.add(txtTanggalPengambilan);
 		
 		JComboBox cbStatus = new JComboBox();
+		cbStatus.setModel(new DefaultComboBoxModel(new String[] {"Diproses", "Selesai"}));
 		cbStatus.setFont(new Font("Montserrat", Font.PLAIN, 12));
 		cbStatus.setBounds(10, 302, 257, 27);
 		order.add(cbStatus);
@@ -188,6 +190,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		order.add(lblPembayaran);
 		
 		JComboBox cbPembayaran = new JComboBox();
+		cbPembayaran.setModel(new DefaultComboBoxModel(new String[] {"Tunai", "Transfer", "QRIS"}));
 		cbPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 12));
 		cbPembayaran.setBounds(12, 425, 257, 27);
 		order.add(cbPembayaran);
@@ -198,6 +201,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		order.add(lblStatusPembayaran);
 		
 		JComboBox cbStatusPembayaran = new JComboBox();
+		cbStatusPembayaran.setModel(new DefaultComboBoxModel(new String[] {"Belum Lunas", "Lunas"}));
 		cbStatusPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 12));
 		cbStatusPembayaran.setBounds(10, 491, 257, 27);
 		order.add(cbStatusPembayaran);
@@ -219,6 +223,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 					order.setTotal(lblTotal.getText());
 					order_repo.save(order);
 					JOptionPane.showMessageDialog(null, "Order berhasil Disimpan");
+					
 				} else {
 					JOptionPane.showMessageDialog(null, "Silahkan pilih Pelanggan terlebih dahulu");
 				}
@@ -345,6 +350,18 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		layanan.add(btnUbahDetail);
 		
 		JButton btnHapusDetail = new JButton("Hapus");
+		btnHapusDetail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(id_order_detail != null) {
+					repo_od.delete(id_order_detail);
+					reset();
+					loadTableDetail();
+				} else {
+					JOptionPane.showMessageDialog(null, 
+							"SIlahkan pilih data yang akan dihapus");
+				}
+			}
+		});
 		btnHapusDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
 		btnHapusDetail.setBounds(276, 336, 89, 23);
 		layanan.add(btnHapusDetail);
@@ -383,7 +400,12 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		contentPane.add(tabelOrder);
 		tabelOrder.setLayout(null);
 		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(0, 0, 583, 234);
+		tabelOrder.add(scrollPane_1);
+		
 		tableOrderDetail = new JTable();
+		scrollPane_1.setViewportView(tableOrderDetail);
 		tableOrderDetail.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -395,8 +417,6 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 			}
 		});
 		tableOrderDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
-		tableOrderDetail.setBounds(0, 0, 583, 234);
-		tabelOrder.add(tableOrderDetail);
 	}
 
 	@Override

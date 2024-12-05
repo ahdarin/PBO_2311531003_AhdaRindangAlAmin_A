@@ -24,6 +24,10 @@ public class TableOrder extends AbstractTableModel{
 		// TODO Auto-generated method stub
 		return 6;
 	}
+	
+	public String getColumnName(int column) {
+		return columnNames[column];
+	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {

@@ -10,6 +10,7 @@ public class TableOrderDetail extends AbstractTableModel {
 	public TableOrderDetail(List<OrderDetail> ls) {
 		this.ls = ls;
 	}
+	
 	@Override
 	public int getRowCount() {
 		// TODO Auto-generated method stub

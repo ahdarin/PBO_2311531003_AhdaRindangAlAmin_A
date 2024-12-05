@@ -81,7 +81,11 @@ public class OrderFrame extends JFrame {
 		contentPane.add(btnOrder);
 		
 		JButton btnEditDetail = new JButton("Edit/Detail");
-		btnEditDetail.setBounds(456, 64, 89, 23);
+		btnEditDetail.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnEditDetail.setBounds(390, 64, 155, 23);
 		contentPane.add(btnEditDetail);
 		
 		JButton btnHapus = new JButton("Hapus");
@@ -94,7 +98,7 @@ public class OrderFrame extends JFrame {
 				}
 			}
 		});
-		btnHapus.setBounds(341, 64, 89, 23);
+		btnHapus.setBounds(288, 64, 89, 23);
 		contentPane.add(btnHapus);
 		
 		JScrollPane scrollPane = new JScrollPane();

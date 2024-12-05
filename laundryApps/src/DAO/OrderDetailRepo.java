@@ -14,7 +14,7 @@ public class OrderDetailRepo implements OrderDetailDAO{
 	private Connection connection;
 	final String insert = "INSERT INTO order_detail (order_id, service_id, harga, jumlah, total) VALUES (?,?,?,?,?);";
 	final String delete = "DELETE FROM order_detail WHERE id=?;";
-	final String update = "UPDATE order_detail SET order_id=?, service_id=?, harga=?, jumlah=?, total=?, WHERE id=?;";
+	final String update = "UPDATE order_detail SET order_id=?, service_id=?, harga=?, jumlah=?, total=? WHERE id=?;";
 
 	public OrderDetailRepo() {
 		connection = Database.koneksi();
@@ -49,7 +49,7 @@ public class OrderDetailRepo implements OrderDetailDAO{
 		try {
 			ls = new ArrayList<OrderDetail>();
 			Statement st = connection.createStatement();
-			String select = "SELECT * FROM order_detail where order_id="+"'"+order_id+"'"+";";
+			final String select = "SELECT * FROM order_detail;";
 			ResultSet rs = st.executeQuery(select);
 			while(rs.next()) {
 				OrderDetail cs = new OrderDetail();

@@ -16,11 +16,11 @@ import model.Order;
 public class OrderRepo implements OrderDAO{
 	
 	private Connection connection;
-	final String insert = "INSERT INTO orders (id, id_pelanggan, tanggal, tanggal_pengambilan, status, pembayaran, status_pembayaran,total) VALUES (?,?,?,?,?,?,?,?);";
-	final String select = "SELECT * FROM orders WHERE id=?";
+	final String insert = "INSERT INTO orders (id, id_pelanggan, tanggal, tanggal_pengambilan, status, pembayaran, status_pembayaran, total) VALUES (?,?,?,?,?,?,?,?);";
+	final String select = "SELECT * FROM orders;";
 	final String delete = "DELETE FROM orders WHERE id=?;";
 	final String delete_detail = "DELETE FROM order_detail WHERE order_id=?;";
-	final String update = "UPDATE orders SET id_pelanggan=?, tanggal=?, tanggal_pengambilan=?, status=?, pembayaran=?, status_pembayaran=?, total=?, WHERE id=?;";
+	final String update = "UPDATE orders SET id_pelanggan=?, tanggal=?, tanggal_pengambilan=?, status=?, pembayaran=?, status_pembayaran=?, total=? WHERE id=?;";
 	
 	public OrderRepo() {
 		connection = Database.koneksi();
@@ -56,7 +56,7 @@ public class OrderRepo implements OrderDAO{
 	@Override
 	public List<Order> show() {
 		// TODO Auto-generated method stub
-		List<Order> ls=null;
+		List<Order> ls = null;
 		try {
 			ls = new ArrayList<Order>();
 			Statement st = connection.createStatement();
@@ -74,7 +74,7 @@ public class OrderRepo implements OrderDAO{
 				ls.add(cs);
 			}
 		} catch (SQLException e) {
-			Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, e);
+			Logger.getLogger(OrderDAO.class.getName()).log(Level.SEVERE, null, e);
 		}
 		return ls;
 	}
