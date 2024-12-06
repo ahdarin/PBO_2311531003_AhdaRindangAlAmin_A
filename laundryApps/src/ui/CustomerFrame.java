@@ -31,7 +31,7 @@ public class CustomerFrame extends JFrame {
 	private JTextField txtName;
 	private JTextField txtAddress;
 	private JTextField txtPhone;
-	private JTable tableCustomer;
+	public static JTable tableCustomer;
 	
 	public void reset() {
 		txtName.setText("");

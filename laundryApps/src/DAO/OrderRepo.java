@@ -132,5 +132,39 @@ public class OrderRepo implements OrderDAO{
 		}
 		
 	}
+	
+	public String getCustomerName(String customerId) {
+	    String name = "";
+	    try {
+	        String query = "SELECT name FROM customer WHERE id = ?";
+	        PreparedStatement stmt = connection.prepareStatement(query);
+	        stmt.setString(1, customerId);
+	        ResultSet rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            name = rs.getString("name");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return name;
+	}
+	
+	public boolean checkOrderExists(String orderId) {
+	    boolean exists = false;
+	    try {
+	        String query = "SELECT COUNT(*) FROM orders WHERE id = ?";
+	        PreparedStatement stmt = connection.prepareStatement(query);
+	        stmt.setString(1, orderId);
+	        ResultSet rs = stmt.executeQuery();
+	        if (rs.next() && rs.getInt(1) > 0) {
+	            exists = true;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return exists;
+	}
+
+
 
 }

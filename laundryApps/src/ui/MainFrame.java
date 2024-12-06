@@ -75,6 +75,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ServiceFrame servicef = new ServiceFrame();
 				servicef.setVisible(true);
+				servicef.loadTable();
 				dispose();
 			}
 		});
@@ -85,6 +86,13 @@ public class MainFrame extends JFrame {
 		contentPane.add(btnLayanan);
 		
 		JButton btnPesanan = new JButton("Pesanan");
+		btnPesanan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderFrame orderf = new OrderFrame();
+				orderf.setVisible(true);
+				orderf.loadTableOrder();
+			}
+		});
 		btnPesanan.setForeground(Color.BLACK);
 		btnPesanan.setFont(new Font("Montserrat", Font.PLAIN, 11));
 		btnPesanan.setBackground(Color.LIGHT_GRAY);
@@ -103,6 +111,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				CustomerFrame cusframe = new CustomerFrame();
 				cusframe.setVisible(true);
+				cusframe.loadTable();
 				dispose();
 			}
 		});
@@ -120,6 +129,11 @@ public class MainFrame extends JFrame {
 		contentPane.add(btnProfil);
 		
 		JButton btnKeluar = new JButton("Keluar");
+		btnKeluar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		btnKeluar.setForeground(Color.BLACK);
 		btnKeluar.setFont(new Font("Montserrat", Font.PLAIN, 11));
 		btnKeluar.setBackground(Color.LIGHT_GRAY);
@@ -135,6 +149,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				UserFrame userf = new UserFrame();
 				userf.setVisible(true);
+				userf.loadTable();
 				dispose();
 			}
 		});

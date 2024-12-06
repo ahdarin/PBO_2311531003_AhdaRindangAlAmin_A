@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.EventQueue;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -18,22 +19,34 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-public class OrderFrame extends JFrame {
+public class OrderFrame extends JFrame{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable tblOrder;
+	private JTable tableOrder;
 	
 	OrderRepo repo_od = new OrderRepo();
 	List<Order> ls_od;
 	String order_id="";
 	
+	public String id_cust;
+	public String tanggal;
+	public String status;
+	public String status_bayar;
+	public String total;
+	public String tanggal_kembali;
+	OrderDetailFrame odf = new OrderDetailFrame();
+	
 	public void loadTableOrder() {
 		ls_od = repo_od.show();
 		TableOrder tu = new TableOrder(ls_od);
-		tblOrder.setModel(tu);
-		tblOrder.getTableHeader().setVisible(true);
+		tableOrder.setModel(tu);
+		tableOrder.getTableHeader().setVisible(true);
 	}
 	/**
 	 * Launch the application.
@@ -71,10 +84,10 @@ public class OrderFrame extends JFrame {
 		JButton btnOrder = new JButton("Buat Orderan");
 		btnOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OrderDetailFrame odf = new OrderDetailFrame();
 				odf.setVisible(true);
 				odf.loadTableDetail();
 				odf.loadTableService();
+				dispose();
 			}
 		});
 		btnOrder.setBounds(10, 64, 119, 23);
@@ -83,6 +96,24 @@ public class OrderFrame extends JFrame {
 		JButton btnEditDetail = new JButton("Edit/Detail");
 		btnEditDetail.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				odf.loadTableDetail();
+				odf.loadTableService();
+				odf.setOrderID(order_id);
+				odf.onDataReceived(id_cust, getCustomerNameById(id_cust));
+				
+				SimpleDateFormat sdf_tanggal = new SimpleDateFormat("yyyy-MM-dd");
+	            try {
+	                Date parsedDate_tanggal = sdf_tanggal.parse(tanggal); 
+	                odf.setTanggal(parsedDate_tanggal); 
+	            } catch (ParseException ex) {
+	                ex.printStackTrace();
+	            }
+	            
+	            odf.setStatus(status);
+	            odf.setStatusBayar(status_bayar);
+	            odf.setTotal(total);
+	            odf.setVisible(true);
+	            dispose();
 			}
 		});
 		btnEditDetail.setBounds(390, 64, 155, 23);
@@ -93,6 +124,7 @@ public class OrderFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(order_id!="") {
 					repo_od.delete(order_id);
+					loadTableOrder();
 				} else {
 					JOptionPane.showMessageDialog(null, "Pilih data yang akan dihapus");
 				}
@@ -105,7 +137,28 @@ public class OrderFrame extends JFrame {
 		scrollPane.setBounds(10, 98, 535, 242);
 		contentPane.add(scrollPane);
 		
-		tblOrder = new JTable();
-		scrollPane.setViewportView(tblOrder);
+		tableOrder = new JTable();
+		tableOrder.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = tableOrder.getSelectedRow();
+                if (selectedRow != -1) { 
+                    order_id = tableOrder.getValueAt(selectedRow, 0).toString(); 
+                }
+                
+                id_cust = tableOrder.getValueAt(tableOrder.getSelectedRow(), 1).toString();
+                tanggal = tableOrder.getValueAt(tableOrder.getSelectedRow(), 2).toString();
+                status = tableOrder.getValueAt(tableOrder.getSelectedRow(), 3).toString();
+                status_bayar = tableOrder.getValueAt(tableOrder.getSelectedRow(), 4).toString();
+                total = tableOrder.getValueAt(tableOrder.getSelectedRow(), 5).toString();
+			}
+		});
+		scrollPane.setViewportView(tableOrder);
 	}
+
+	private String getCustomerNameById(String customerId) {
+	    // Logika untuk mendapatkan nama pelanggan dari database
+	    return repo_od.getCustomerName(customerId);
+	}
+
 }

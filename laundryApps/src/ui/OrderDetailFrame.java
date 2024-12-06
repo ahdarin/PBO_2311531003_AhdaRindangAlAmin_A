@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -48,6 +49,12 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 	private JTable tableOrderDetail;
 	JTable tableLayanan;
 	JTextField txtPelanggan;
+	JDateChooser CalTanggal;
+	JDateChooser CalTanggalKembali;
+	JComboBox cbStatus;
+	JComboBox cbPembayaran;
+	JComboBox cbStatusPembayaran;
+	JLabel lblTotal;
 	
 	ServiceRepo sr = new ServiceRepo();
 	List<Service> ls_service;
@@ -92,6 +99,32 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 	
 	public String tgl;
 	public String tgl_kbl;
+	
+	public void setOrderID(String id) {
+		txtOrderID.setText(id);
+	}
+	public void setCustID (String id) {
+		id_pelanggan=id;
+	}
+	public void setPelanggan (String pelanggan) {
+		txtPelanggan.setText(pelanggan);
+	}
+	public void setTanggal(Date date) {
+		CalTanggal.setDate(date);
+	}
+	public void setTanggalKembali(Date date) {
+		CalTanggalKembali.setDate(date);
+	}
+	public void setStatus (String proses) {
+		cbStatus.setSelectedItem(proses);
+	}
+	public void setTotal (String total) {
+		lblTotal.setText(total);
+	}
+	public void setStatusBayar (String status) {
+		cbStatusPembayaran.setSelectedItem(status);
+	}
+	
 	
 	/**
 	 * Launch the application.
@@ -155,7 +188,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		lblTanggalPengambilan.setBounds(10, 208, 197, 27);
 		order.add(lblTanggalPengambilan);
 		
-		JComboBox cbStatus = new JComboBox();
+		cbStatus = new JComboBox();
 		cbStatus.setModel(new DefaultComboBoxModel(new String[] {"Diproses", "Selesai"}));
 		cbStatus.setFont(new Font("Montserrat", Font.PLAIN, 12));
 		cbStatus.setBounds(10, 302, 257, 27);
@@ -171,7 +204,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		lbltulisanTotal.setBounds(12, 340, 108, 27);
 		order.add(lbltulisanTotal);
 		
-		JLabel lblTotal = new JLabel("Rp. 10.000");
+		lblTotal = new JLabel("");
 		lblTotal.setFont(new Font("Montserrat", Font.PLAIN, 16));
 		lblTotal.setBounds(12, 364, 108, 27);
 		order.add(lblTotal);
@@ -181,7 +214,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		lblPembayaran.setBounds(12, 397, 108, 27);
 		order.add(lblPembayaran);
 		
-		JComboBox cbPembayaran = new JComboBox();
+		cbPembayaran = new JComboBox();
 		cbPembayaran.setModel(new DefaultComboBoxModel(new String[] {"Tunai", "Transfer", "QRIS"}));
 		cbPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 12));
 		cbPembayaran.setBounds(12, 425, 257, 27);
@@ -192,7 +225,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		lblStatusPembayaran.setBounds(10, 463, 164, 27);
 		order.add(lblStatusPembayaran);
 		
-		JComboBox cbStatusPembayaran = new JComboBox();
+		cbStatusPembayaran = new JComboBox();
 		cbStatusPembayaran.setModel(new DefaultComboBoxModel(new String[] {"Belum Lunas", "Lunas"}));
 		cbStatusPembayaran.setFont(new Font("Montserrat", Font.PLAIN, 12));
 		cbStatusPembayaran.setBounds(10, 491, 257, 27);
@@ -201,24 +234,41 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		JButton btnSimpanOrder = new JButton("Simpan");
 		btnSimpanOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OrderRepo order_repo = new OrderRepo();
-				
-				if(id_pelanggan !="") {
-					Order order = new Order();
-					order.setId(txtOrderID.getText());
-					order.setId_pelanggan(id_pelanggan);
-					order.setTanggal(tgl);
-					order.setTanggal_pengambilan(tgl_kbl);
-					order.setStatus(cbStatus.getSelectedItem().toString());
-					order.setStatus_pembayaran(cbStatusPembayaran.getSelectedItem().toString());
-					order.setPembayaran(cbPembayaran.getSelectedItem().toString());
-					order.setTotal(lblTotal.getText());
-					order_repo.save(order);
-					JOptionPane.showMessageDialog(null, "Order berhasil Disimpan");
-					
-				} else {
-					JOptionPane.showMessageDialog(null, "Silahkan pilih Pelanggan terlebih dahulu");
-				}
+				  OrderRepo order_repo = new OrderRepo();
+
+			        if (!id_pelanggan.isEmpty()) {
+			            Order order = new Order();
+			            order.setId(txtOrderID.getText());
+			            order.setId_pelanggan(id_pelanggan);
+			            order.setTanggal(tgl);
+			            order.setTanggal_pengambilan(tgl_kbl);
+			            order.setStatus(cbStatus.getSelectedItem().toString());
+			            order.setStatus_pembayaran(cbStatusPembayaran.getSelectedItem().toString());
+			            order.setPembayaran(cbPembayaran.getSelectedItem().toString());
+			            order.setTotal(lblTotal.getText());
+
+			            // Periksa apakah Order ID sudah ada
+			            boolean isExistingOrder = order_repo.checkOrderExists(txtOrderID.getText());
+
+			            if (isExistingOrder) {
+			                // Jika Order ID sudah ada, lakukan update
+			                order_repo.update(order);
+			                JOptionPane.showMessageDialog(null, "Order berhasil diperbarui");
+			            } else {
+			                // Jika Order ID belum ada, lakukan save
+			                order_repo.save(order);
+			                JOptionPane.showMessageDialog(null, "Order berhasil disimpan");
+			            }
+
+			            // Tutup frame dan buka OrderFrame
+			            OrderFrame orderFrame = new OrderFrame();
+			            orderFrame.setVisible(true);
+			            orderFrame.loadTableOrder();
+			            dispose();
+
+			        } else {
+			            JOptionPane.showMessageDialog(null, "Silahkan pilih Pelanggan terlebih dahulu");
+			        }
 				
 			}
 		});
@@ -227,6 +277,14 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		order.add(btnSimpanOrder);
 		
 		JButton btnBatalOrder = new JButton("Batal");
+		btnBatalOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				OrderFrame orderFrame = new OrderFrame();
+	            orderFrame.setVisible(true);
+	            orderFrame.loadTableOrder();
+	            dispose();
+			}
+		});
 		btnBatalOrder.setFont(new Font("Montserrat", Font.PLAIN, 11));
 		btnBatalOrder.setBounds(156, 556, 89, 23);
 		order.add(btnBatalOrder);
@@ -244,8 +302,8 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		txtPelanggan.setBounds(10, 114, 255, 27);
 		order.add(txtPelanggan);
 		
-		JDateChooser CalTanggal = new JDateChooser();
-		CalTanggal.setBounds(10, 168, 245, 27);
+		CalTanggal = new JDateChooser();
+		CalTanggal.setBounds(10, 168, 255, 27);
 		order.add(CalTanggal);
 		CalTanggal.getDateEditor().addPropertyChangeListener("date", evt -> {
 		    if (CalTanggal.getDate() != null) {
@@ -254,8 +312,8 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		    }
 		});
 		
-		JDateChooser CalTanggalKembali = new JDateChooser();
-		CalTanggalKembali.setBounds(10, 236, 245, 27);
+		CalTanggalKembali = new JDateChooser();
+		CalTanggalKembali.setBounds(10, 236, 257, 27);
 		order.add(CalTanggalKembali);
 		CalTanggalKembali.getDateEditor().addPropertyChangeListener("date", evt -> {
 		    if (CalTanggalKembali.getDate() != null) {
@@ -422,10 +480,12 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				id_order_detail = tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 0).toString();
+				txtOrderID.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 1).toString());
 				id_service = tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 2).toString();
 				txtHarga.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 3).toString());
-				txtTotal.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 5).toString());
 				txtJumlah.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 4).toString());
+				txtTotal.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 5).toString());
+				lblTotal.setText(tableOrderDetail.getValueAt(tableOrderDetail.getSelectedRow(), 5).toString());
 			}
 		});
 		tableOrderDetail.setFont(new Font("Montserrat", Font.PLAIN, 11));
