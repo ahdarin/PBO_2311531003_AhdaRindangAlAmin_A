@@ -125,6 +125,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		cbStatusPembayaran.setSelectedItem(status);
 	}
 	
+	OrderRepo order_repo = new OrderRepo();
 	
 	/**
 	 * Launch the application.
@@ -148,6 +149,8 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 	 * Create the frame.
 	 */
 	public OrderDetailFrame() {
+		
+	    
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 904, 682);
 		contentPane = new JPanel();
@@ -172,6 +175,10 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		txtOrderID.setBounds(10, 38, 255, 27);
 		order.add(txtOrderID);
 		txtOrderID.setColumns(10);
+		
+		String generatedOrderId = order_repo.generateOrderId();
+	    txtOrderID.setText(generatedOrderId);
+	    txtOrderID.setEditable(false);
 		
 		JLabel lblPelanggan = new JLabel("Pelanggan");
 		lblPelanggan.setFont(new Font("Montserrat", Font.PLAIN, 13));
@@ -234,8 +241,7 @@ public class OrderDetailFrame extends JFrame implements DataListener{
 		JButton btnSimpanOrder = new JButton("Simpan");
 		btnSimpanOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				  OrderRepo order_repo = new OrderRepo();
-
+				  
 			        if (!id_pelanggan.isEmpty()) {
 			            Order order = new Order();
 			            order.setId(txtOrderID.getText());

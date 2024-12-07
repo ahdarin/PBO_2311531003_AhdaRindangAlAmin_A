@@ -164,7 +164,24 @@ public class OrderRepo implements OrderDAO{
 	    }
 	    return exists;
 	}
+	
+	public String generateOrderId() {
+	    String newOrderId = "TRX-0001"; // Default untuk ID pertama
+	    try {
+	        String query = "SELECT id FROM orders ORDER BY id DESC LIMIT 1";
+	        PreparedStatement stmt = connection.prepareStatement(query);
+	        ResultSet rs = stmt.executeQuery();
 
-
+	        if (rs.next()) {
+	            String lastOrderId = rs.getString("id");
+	            int lastNumber = Integer.parseInt(lastOrderId.split("-")[1]);
+	            int newNumber = lastNumber + 1;
+	            newOrderId = String.format("TRX-%04d", newNumber);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return newOrderId;
+	}
 
 }
