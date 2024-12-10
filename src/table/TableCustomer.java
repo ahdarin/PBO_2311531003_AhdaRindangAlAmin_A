@@ -36,7 +36,7 @@ public class TableCustomer extends AbstractTableModel {
 		case 2:
 			return ls.get(rowIndex).getAlamat();
 		case 3:
-			return ls.get(rowIndex).getNoHP();
+			return ls.get(rowIndex).getHp();
 		default:
 			return null;
 		}

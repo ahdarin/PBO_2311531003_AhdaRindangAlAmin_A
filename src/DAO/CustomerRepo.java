@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import config.DatabaseHelper;
 import model.Customer;
+import model.CustomerBuilder;
 
 public class CustomerRepo implements CustomerDAO{
 	
@@ -30,7 +31,7 @@ public class CustomerRepo implements CustomerDAO{
 			st = connection.prepareStatement(insert);
 			st.setString(1, customer.getNama());
 			st.setString(2, customer.getAlamat());
-			st.setString(3, customer.getNoHP());
+			st.setString(3, customer.getHp());
 			st.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -55,11 +56,12 @@ public class CustomerRepo implements CustomerDAO{
 			Statement st = connection.createStatement();
 			ResultSet rs = st.executeQuery(select);
 			while(rs.next()) {
-				Customer customer = new Customer();
-				customer.setId(rs.getString("id"));
-				customer.setNama(rs.getString("name"));
-				customer.setAlamat(rs.getString("address"));
-				customer.setNoHP(rs.getString("phone"));
+				Customer customer = new CustomerBuilder()
+				.setId(rs.getString("id"))
+				.setNama(rs.getString("name"))
+				.setAlamat(rs.getString("address"))
+				.setHp(rs.getString("phone"))
+				.build();
 				ls.add(customer);
 			}
 		} catch(SQLException e) {
@@ -94,7 +96,7 @@ public class CustomerRepo implements CustomerDAO{
 			st= connection.prepareStatement(update);
 			st.setString(1, customer.getNama());
 			st.setString(2, customer.getAlamat());
-			st.setString(3, customer.getNoHP());
+			st.setString(3, customer.getHp());
 			st.setString(4, customer.getId());
 			st.executeUpdate();
 		} catch (SQLException e) {

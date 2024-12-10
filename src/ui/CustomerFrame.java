@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import DAO.CustomerRepo;
 import model.Customer;
+import model.CustomerBuilder;
 import table.TableCustomer;
 
 import java.awt.Color;
@@ -45,8 +46,8 @@ public class CustomerFrame extends JFrame {
 	
 	public void loadTable() {
 		ls = cusr.show();
-		TableCustomer tu = new TableCustomer(ls);
-		tableCustomer.setModel(tu);
+		TableCustomer tc = new TableCustomer(ls);
+		tableCustomer.setModel(tc);
 		tableCustomer.getTableHeader().setVisible(true);
 	}
 
@@ -115,10 +116,11 @@ public class CustomerFrame extends JFrame {
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Customer customer = new Customer();
-				customer.setNama(txtName.getText());
-				customer.setAlamat(txtAddress.getText());
-				customer.setNoHP(txtPhone.getText());
+				Customer customer = new CustomerBuilder()
+				.setNama(txtName.getText())
+				.setAlamat(txtAddress.getText())
+				.setHp(txtPhone.getText())
+				.build();
 				cusr.save(customer);
 				reset();
 				loadTable();
@@ -130,11 +132,12 @@ public class CustomerFrame extends JFrame {
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Customer customer = new Customer();
-				customer.setNama(txtName.getText());
-				customer.setAlamat(txtAddress.getText());
-				customer.setNoHP(txtPhone.getText());
-				customer.setId(id);
+				Customer customer = new CustomerBuilder()
+				.setNama(txtName.getText())
+				.setAlamat(txtAddress.getText())
+				.setHp(txtPhone.getText())
+				.setId(id)
+				.build();
 				cusr.update(customer);
 				reset();
 				loadTable();
